@@ -65,9 +65,7 @@ public class SpotifyRepository {
             }
         }
         if(!flag) {
-            Artist newArtist = new Artist(artistName);
-            artists.add(newArtist);
-            currentArtist=newArtist;
+            createArtist(artistName);
         }
         Album newAlbum = new Album(title);
         albums.add(newAlbum);
@@ -88,13 +86,15 @@ public class SpotifyRepository {
             }
         }
         if(!flag)throw new Exception("Album does not exist");
+
         Song newSong = new Song(title, length);
         newSong.setLikes(0);
+        songs.add(newSong);
+
         //add song to album
         albumSongMap.get(currentAlbum).add(newSong);
         songLikeMap.put(newSong, new ArrayList<>());
-        //add song to songs
-        songs.add(newSong);
+
         return newSong;
     }
 
@@ -114,15 +114,18 @@ public class SpotifyRepository {
         playlists.add(newPlaylist);
 
         playlistListenerMap.put(newPlaylist,new ArrayList<>());
+        playlistSongMap.put(newPlaylist, new ArrayList<>());
 
         List<Song> li = playlistSongMap.get(newPlaylist);
         for(Song song : songs){
             if(song.getLength()==length)
                 li.add(song);
         }
-        playlistSongMap.put(newPlaylist,li);
+
         creatorPlaylistMap.put(creator,newPlaylist);
         playlistListenerMap.get(newPlaylist).add(creator);
+        userPlaylistMap.get(creator).add(newPlaylist);
+
         return newPlaylist;
     }
 
@@ -155,6 +158,7 @@ public class SpotifyRepository {
         playlistListenerMap.get(newPlaylist).add(creator);
         creatorPlaylistMap.put(creator,newPlaylist);
         userPlaylistMap.get(creator).add(newPlaylist);
+
         return newPlaylist;
     }
 
@@ -183,16 +187,11 @@ public class SpotifyRepository {
 
 
         // add user as listerns if not added
-        List<User> listners = playlistListenerMap.get(searchedPlayList);
-        boolean flag1 = false;
-
-        for(User user : listners){
-            if(user.getMobile().equals(mobile)){
-                flag1=true;
-                break;
-            }
+        if(creatorPlaylistMap.containsKey(listner) && creatorPlaylistMap.get(listner)==searchedPlayList ||
+            playlistListenerMap.get(searchedPlayList).contains(listner)){
+            return  searchedPlayList;
         }
-        if(!flag1)listners.add(listner);
+        playlistListenerMap.get(searchedPlayList).add(listner);
         if(!userPlaylistMap.get(listner).contains(searchedPlayList)) {
             userPlaylistMap.get(listner).add(searchedPlayList);
         }
@@ -225,6 +224,7 @@ public class SpotifyRepository {
         if(!flag1)throw new Exception("Song does not exist");
 
         //User like the current song if not done already
+
         List<User> userLiked = songLikeMap.get(currentSong);
         boolean liked = false;
         for(User user : userLiked){
