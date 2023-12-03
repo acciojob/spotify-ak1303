@@ -38,7 +38,7 @@ public class SpotifyService {
         try {
             return  spotifyRepository.createPlaylistOnLength(mobile, title, length);
         }catch (Exception e){
-            System.out.println("User does not exist");
+            System.out.println(e.getMessage());
             return null;
         }
     }
@@ -47,7 +47,7 @@ public class SpotifyService {
         try {
             return  spotifyRepository.createPlaylistOnName(mobile, title, songTitles);
         }catch (Exception e){
-            System.out.println("User does not exist");
+            System.out.println(e.getMessage());
             return null;
         }
     }
