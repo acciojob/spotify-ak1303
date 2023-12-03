@@ -39,15 +39,13 @@ public class SpotifyRepository {
 
     public User createUser(String name, String mobile) {
         User newUser = new User(name,mobile);
-        if(!users.contains(newUser))
-            users.add(newUser);
+        users.add(newUser);
         return newUser;
     }
 
     public Artist createArtist(String name) {
         Artist newArtist = new Artist(name);
-        if(!artists.contains(newArtist))
-            artists.add(newArtist);
+        artists.add(newArtist);
         return newArtist;
     }
 
@@ -115,6 +113,7 @@ public class SpotifyRepository {
         List<User> userList = new ArrayList<>();
         userList.add(creator);
         playlistListenerMap.put(newPlaylist,userList);
+        creatorPlaylistMap.put(creator,newPlaylist);
         playlists.add(newPlaylist);
         List<Song> li = new ArrayList<>();
         for(Song song : songs){
