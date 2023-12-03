@@ -47,7 +47,6 @@ public class SpotifyRepository {
     public Artist createArtist(String name) {
         Artist newArtist = new Artist(name);
         artists.add(newArtist);
-        newArtist.setLikes(0);
         artistAlbumMap.put(newArtist, new ArrayList<>());
         return newArtist;
     }
@@ -192,6 +191,7 @@ public class SpotifyRepository {
             return  searchedPlayList;
         }
         playlistListenerMap.get(searchedPlayList).add(listner);
+
         if(!userPlaylistMap.get(listner).contains(searchedPlayList)) {
             userPlaylistMap.get(listner).add(searchedPlayList);
         }
