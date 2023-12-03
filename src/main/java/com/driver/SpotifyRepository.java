@@ -210,7 +210,7 @@ public class SpotifyRepository {
                 break;
             }
         }
-        if(!flag)throw new Exception("Song does not exist");
+        if(!flag1)throw new Exception("Song does not exist");
 
         //User like the current song if not done already
         List<User> userLiked = songLikeMap.get(currentSong);
@@ -225,6 +225,32 @@ public class SpotifyRepository {
             userLiked.add(currentUser);
             currentSong.setLikes(currentSong.getLikes()+1);
             //corresponding artist liked automatically
+            Album artistAlbum = null;
+            for(Album key : albumSongMap.keySet()){
+                List<Song> li = albumSongMap.get(key);
+                for(Song song : li){
+                    if(song==currentSong){
+                        artistAlbum=key;
+                        break;
+                    }
+                }
+                if(artistAlbum!=null)break;
+            }
+            Artist likedArtist = null;
+            for(Artist key : artistAlbumMap.keySet()){
+                List<Album> li = artistAlbumMap.get(key);
+                for(Album album : li){
+                    if(album==artistAlbum){
+                        likedArtist=key;
+                        break;
+                    }
+                }
+                if(likedArtist!=null)break;
+            }
+            if(likedArtist!=null){
+                likedArtist.setLikes(likedArtist.getLikes()+1);
+            }
+
         }
         return currentSong;
     }
